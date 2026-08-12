@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CodeTales — Little Red Riding Hood</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="landing-screen" id="landingScreen">
+  <div class="landing-bg-glow"></div>
+  <div class="landing-content">
+    <div class="landing-logo"><span class="dot">●</span> StoryCode</div>
+    <div class="landing-tagline">Learn to code by living inside the story.</div>
+    <button class="landing-start-btn" id="landingStartBtn">Start</button>
+  </div>
+</div>
+
+<div class="map-screen" id="mapScreen" style="display:none">
+  <div class="map-header">
+    <div class="map-title">Choose Your Story</div>
+    <div class="map-sub">Finish each story, easiest to hardest, to unlock the next one.</div>
+  </div>
+  <div class="map-trail-wrap">
+    <svg class="map-trail-svg" viewBox="0 0 800 560" preserveAspectRatio="none">
+      <path d="M90,470 Q230,420 300,340 Q380,250 420,260 Q470,275 520,190 Q560,120 700,80"
+            stroke="#e8d9b5" stroke-width="7" fill="none" stroke-dasharray="3,16"
+            stroke-linecap="round" opacity="0.55"/>
+    </svg>
+
+    <div class="trail-stop unlocked" id="cardLRRH" style="left:11%; top:78%;">
+      <div class="trail-stop-pin">🧺</div>
+      <div class="trail-stop-card">
+        <div class="game-card-title">Little Red Riding Hood</div>
+        <div class="game-card-status" id="cardLRRHStatus">Not started</div>
+      </div>
+    </div>
+
+    <div class="trail-stop locked" style="left:52%; top:42%;">
+      <div class="trail-stop-pin">🐷</div>
+      <div class="trail-stop-card">
+        <div class="game-card-title">The Three Little Pigs</div>
+        <div class="game-card-status">🔒 Finish the story before to unlock</div>
+      </div>
+    </div>
+
+    <div class="trail-stop locked" style="left:86%; top:12%;">
+      <div class="trail-stop-pin">🐻</div>
+      <div class="trail-stop-card">
+        <div class="game-card-title">Goldilocks &amp; the Three Bears</div>
+        <div class="game-card-status">🔒 Finish the story before to unlock</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app" id="gameScreen" style="display:none">
+
+  <header>
+    <div class="header-top">
+      <div class="logo"><span class="dot">●</span> CodeTales</div>
+      <div class="xp-wrap">
+        <div class="xp-badge" id="xpBadge">1</div>
+        <div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
+        <div class="xp-text"><span id="xpNum">0</span> / 100 XP</div>
+      </div>
+    </div>
+    <div class="trail" id="trail"></div>
+  </header>
+
+  <main>
+    <section class="scene-wrap" id="sceneWrap">
+     <div class="scene-inner" id="scene1">
+      <div class="sky-glow"></div>
+      <div class="layer hills-far"></div>
+      <div class="layer hills-mid"></div>
+      <div class="layer ground"></div>
+
+      <!-- trees -->
+      <div class="tree" style="left:2%; bottom:20%; width:60px;">
+        <svg viewBox="0 0 60 90" width="60" height="90"><path d="M30 90 L30 55" stroke="#4a3222" stroke-width="6"/><circle cx="30" cy="35" r="30" fill="#3f7d55"/></svg>
+      </div>
+      <div class="tree" style="right:2%; bottom:18%; width:70px;">
+        <svg viewBox="0 0 60 90" width="70" height="105"><path d="M30 90 L30 55" stroke="#4a3222" stroke-width="6"/><circle cx="30" cy="35" r="30" fill="#2c5e3c"/></svg>
+      </div>
+      <div class="tree" style="left:38%; bottom:32%; width:36px; opacity:0.85;">
+        <svg viewBox="0 0 60 90" width="36" height="54"><path d="M30 90 L30 55" stroke="#4a3222" stroke-width="6"/><circle cx="30" cy="35" r="28" fill="#5f9c72"/></svg>
+      </div>
+
+      <!-- house -->
+      <div class="house">
+        <svg viewBox="0 0 150 120" width="150" height="120">
+          <polygon points="10,55 75,10 140,55" fill="#8a4b32"/>
+          <rect x="25" y="55" width="100" height="60" fill="#e9c496"/>
+          <rect x="65" y="75" width="24" height="40" fill="#5c3d21"/>
+          <rect x="35" y="65" width="18" height="18" fill="#cfe8ea" stroke="#5c3d21" stroke-width="2"/>
+          <rect x="97" y="65" width="18" height="18" fill="#cfe8ea" stroke="#5c3d21" stroke-width="2"/>
+        </svg>
+      </div>
+
+      <div class="basket-hud">
+        <span class="icon" id="basketIcon">🧺</span>
+        <div>
+          <div>Basket</div>
+          <div class="contents" id="basketContents">rocks</div>
+        </div>
+      </div>
+
+      <div class="signpost">
+        <div class="board" id="signBoard">Wolf's Den</div>
+        <div class="pole"></div>
+      </div>
+
+      <!-- character -->
+      <div class="char" id="character">
+        <img id="charImg1" class="char-sprite" alt="Little Red" style="width:72px; height:auto; display:block; filter:drop-shadow(0 6px 6px rgba(0,0,0,0.2));" />
+      </div>
+
+      <div class="scene-caption" id="sceneCaption">Little Red is getting ready to leave home — but something isn't right yet.</div>
+     </div>
+
+     <div class="scene-inner" id="scene2" style="display:none">
+      <div class="sky-glow storm"></div>
+      <div class="layer hills-far storm"></div>
+      <div class="layer hills-mid storm"></div>
+      <div class="layer ground storm"></div>
+
+      <div class="cloud" style="left:6%; top:8%; width:120px;"></div>
+      <div class="cloud" style="left:40%; top:4%; width:150px;"></div>
+      <div class="cloud" style="left:72%; top:10%; width:110px;"></div>
+
+      <div class="rain" id="rainLayer"></div>
+      <div class="lightning" id="lightningFlash"></div>
+
+      <!-- path artwork removed per feedback; invisible anchors keep existing JS glow/dim logic working -->
+      <span id="meadowTrail" style="display:none;"></span>
+      <span id="bridgePlanks" style="display:none;"></span>
+
+      <div class="path-glow" id="meadowGlow" style="left:6%; bottom:2%; width:36%; height:18%;"></div>
+      <div class="path-glow" id="bridgeGlow" style="left:58%; bottom:2%; width:36%; height:18%;"></div>
+
+      <div class="fork-label" id="labelMeadow">Meadow Path</div>
+      <div class="fork-label" id="labelBridge">Old Bridge</div>
+      <div class="path-block" id="blockMeadow">🌳</div>
+      <div class="path-block" id="blockBridge">🌳</div>
+
+      <!-- character (chapter 2 copy) -->
+      <div class="char" id="character2">
+        <img id="charImg2" class="char-sprite" alt="Little Red" style="width:72px; height:auto; display:block; filter:drop-shadow(0 6px 6px rgba(0,0,0,0.2));" />
+      </div>
+
+      <div class="scene-caption" id="sceneCaption2">The storm has made the old bridge dangerous — but the code doesn't seem to know that yet.</div>
+     </div>
+
+     <div class="scene-inner" id="scene3" style="display:none">
+      <div class="sky-glow"></div>
+      <div class="layer hills-far"></div>
+      <div class="layer hills-mid"></div>
+      <div class="layer ground"></div>
+
+      <div class="tree" style="left:2%; bottom:20%; width:60px;">
+        <svg viewBox="0 0 60 90" width="60" height="90"><path d="M30 90 L30 55" stroke="#4a3222" stroke-width="6"/><circle cx="30" cy="35" r="30" fill="#3f7d55"/></svg>
+      </div>
+      <div class="tree" style="right:6%; bottom:18%; width:56px; opacity:0.9;">
+        <svg viewBox="0 0 60 90" width="56" height="84"><path d="M30 90 L30 55" stroke="#4a3222" stroke-width="6"/><circle cx="30" cy="35" r="28" fill="#2c5e3c"/></svg>
+      </div>
+
+      <!-- the wolf, blocking the path -->
+      <div class="wolf" id="wolfChar3" style="right:20%; bottom:20%; transform:scaleX(1);">
+        <img id="wolfImg3" alt="The Wolf" style="width:88px; height:auto; display:block; filter:drop-shadow(0 6px 6px rgba(0,0,0,0.3));" />
+      </div>
+
+      <div class="dialogue-bubble" id="dialogueBubble3"></div>
+
+      <div class="basket-hud">
+        <span class="icon">🗣️</span>
+        <div>
+          <div>Wolf's lines</div>
+          <div class="contents" id="lineCountText3">0 / 3</div>
+        </div>
+      </div>
+
+      <!-- character (chapter 3 copy) -->
+      <div class="char" id="character3">
+        <img id="charImg3" class="char-sprite" alt="Little Red" style="width:72px; height:auto; display:block; filter:drop-shadow(0 6px 6px rgba(0,0,0,0.2));" />
+      </div>
+
+      <div class="scene-caption" id="sceneCaption3">A wolf steps out onto the path ahead — he looks like he has something to say.</div>
+     </div>
+
+     <div class="scene-inner" id="scene4" style="display:none">
+      <div class="sky-glow"></div>
+      <div class="layer hills-far"></div>
+      <div class="layer hills-mid"></div>
+      <div class="layer ground"></div>
+
+      <div class="tree" style="left:1%; bottom:22%; width:50px; opacity:0.9;">
+        <svg viewBox="0 0 60 90" width="50" height="75"><path d="M30 90 L30 55" stroke="#4a3222" stroke-width="6"/><circle cx="30" cy="35" r="28" fill="#3f7d55"/></svg>
+      </div>
+      <div class="tree" style="right:1%; bottom:20%; width:56px; opacity:0.9;">
+        <svg viewBox="0 0 60 90" width="56" height="84"><path d="M30 90 L30 55" stroke="#4a3222" stroke-width="6"/><circle cx="30" cy="35" r="28" fill="#2c5e3c"/></svg>
+      </div>
+
+      <svg class="fork-ground" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <path d="M4 82 Q50 92 96 82" stroke="#274430" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.4"/>
+      </svg>
+
+      <!-- 5 flower spots along the path -->
+      <div class="flower-spot" id="flower0" style="left:12%;"><svg viewBox="0 0 30 30" width="30" height="30"><circle cx="15" cy="15" r="4" class="fpetal-c"/><circle cx="15" cy="9" r="4" class="fpetal"/><circle cx="21" cy="15" r="4" class="fpetal"/><circle cx="15" cy="21" r="4" class="fpetal"/><circle cx="9" cy="15" r="4" class="fpetal"/></svg></div>
+      <div class="flower-spot" id="flower1" style="left:28%;"><svg viewBox="0 0 30 30" width="30" height="30"><circle cx="15" cy="15" r="4" class="fpetal-c"/><circle cx="15" cy="9" r="4" class="fpetal"/><circle cx="21" cy="15" r="4" class="fpetal"/><circle cx="15" cy="21" r="4" class="fpetal"/><circle cx="9" cy="15" r="4" class="fpetal"/></svg></div>
+      <div class="flower-spot" id="flower2" style="left:44%;"><svg viewBox="0 0 30 30" width="30" height="30"><circle cx="15" cy="15" r="4" class="fpetal-c"/><circle cx="15" cy="9" r="4" class="fpetal"/><circle cx="21" cy="15" r="4" class="fpetal"/><circle cx="15" cy="21" r="4" class="fpetal"/><circle cx="9" cy="15" r="4" class="fpetal"/></svg></div>
+      <div class="flower-spot" id="flower3" style="left:60%;"><svg viewBox="0 0 30 30" width="30" height="30"><circle cx="15" cy="15" r="4" class="fpetal-c"/><circle cx="15" cy="9" r="4" class="fpetal"/><circle cx="21" cy="15" r="4" class="fpetal"/><circle cx="15" cy="21" r="4" class="fpetal"/><circle cx="9" cy="15" r="4" class="fpetal"/></svg></div>
+      <div class="flower-spot" id="flower4" style="left:76%;"><svg viewBox="0 0 30 30" width="30" height="30"><circle cx="15" cy="15" r="4" class="fpetal-c"/><circle cx="15" cy="9" r="4" class="fpetal"/><circle cx="21" cy="15" r="4" class="fpetal"/><circle cx="15" cy="21" r="4" class="fpetal"/><circle cx="9" cy="15" r="4" class="fpetal"/></svg></div>
+
+
+      <div class="basket-hud">
+        <span class="icon" id="flowerCountIcon">🌸</span>
+        <div>
+          <div>Flowers picked</div>
+          <div class="contents" id="flowerCountText">0 / 5</div>
+        </div>
+      </div>
+
+      <!-- character (chapter 3 copy) -->
+      <div class="char" id="character4">
+        <img id="charImg4" class="char-sprite" alt="Little Red" style="width:72px; height:auto; display:block; filter:drop-shadow(0 6px 6px rgba(0,0,0,0.2));" />
+      </div>
+
+      <div class="scene-caption" id="sceneCaption4">Five flowers grow along this stretch of path — Grandma loves a full bouquet.</div>
+     </div>
+
+     <div class="scene-inner" id="scene5" style="display:none">
+      <div class="sky-glow"></div>
+      <div class="layer hills-far"></div>
+      <div class="layer hills-mid"></div>
+      <div class="layer ground"></div>
+
+      <div class="tree" style="left:1%; bottom:22%; width:50px; opacity:0.9;">
+        <svg viewBox="0 0 60 90" width="50" height="75"><path d="M30 90 L30 55" stroke="#4a3222" stroke-width="6"/><circle cx="30" cy="35" r="28" fill="#3f7d55"/></svg>
+      </div>
+      <div class="tree" style="right:1%; bottom:20%; width:56px; opacity:0.9;">
+        <svg viewBox="0 0 60 90" width="56" height="84"><path d="M30 90 L30 55" stroke="#4a3222" stroke-width="6"/><circle cx="30" cy="35" r="28" fill="#2c5e3c"/></svg>
+      </div>
+
+      <!-- gap in the ground with a fallen log crossing it -->
+      <svg class="fork-ground" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <path d="M38 78 L44 100 L64 100 L58 76 Z" fill="#22384a"/>
+        <path d="M40 79 L45 99 L62 99 L57 78 Z" fill="#152534"/>
+        <rect id="fallenLog" x="35" y="80" width="34" height="6" rx="3" fill="#8a6a3f" stroke="#5c3d21" stroke-width="1.5" transform="rotate(-2 51 83)"/>
+        <circle cx="37" cy="83" r="3.4" fill="#c9a876" stroke="#5c3d21" stroke-width="1"/>
+        <circle cx="65" cy="82" r="3.4" fill="#c9a876" stroke="#5c3d21" stroke-width="1"/>
+      </svg>
+
+      <div class="gap-bubble" id="gapBubble">There's a gap here — jump it!</div>
+
+      <div class="basket-hud">
+        <span class="icon">📜</span>
+        <div>
+          <div>Grandma's note</div>
+          <div class="contents">move, jump, move</div>
+        </div>
+      </div>
+
+      <!-- character (chapter 4 copy) -->
+      <div class="char" id="character5">
+        <img id="charImg5" class="char-sprite" alt="Little Red" style="width:72px; height:auto; display:block; filter:drop-shadow(0 6px 6px rgba(0,0,0,0.2));" />
+      </div>
+
+      <div class="scene-caption" id="sceneCaption5">Grandma left instructions for crossing this old log — but the steps look out of order.</div>
+     </div>
+
+     <div class="scene-inner" id="scene6" style="display:none">
+      <div class="sky-glow wolfdim"></div>
+      <div class="layer hills-far wolfdim"></div>
+      <div class="layer hills-mid wolfdim"></div>
+      <div class="layer ground wolfdim"></div>
+
+      <div class="tree" style="left:1%; bottom:20%; width:56px; opacity:0.95;">
+        <svg viewBox="0 0 60 90" width="56" height="84"><path d="M30 90 L30 55" stroke="#2c2130" stroke-width="6"/><circle cx="30" cy="35" r="28" fill="#3a4a3f"/></svg>
+      </div>
+
+      <!-- bush the wolf hides behind -->
+      <div class="wolf-bush" id="wolfBush">
+        <svg viewBox="0 0 90 50" width="90" height="50">
+          <ellipse cx="45" cy="35" rx="42" ry="18" fill="#2f4a37"/>
+          <ellipse cx="20" cy="30" rx="20" ry="14" fill="#375c41"/>
+          <ellipse cx="68" cy="30" rx="20" ry="14" fill="#375c41"/>
+        </svg>
+      </div>
+
+      <!-- the wolf -->
+      <div class="wolf" id="wolfChar">
+        <img id="wolfImg" class="wolf-sprite" alt="The Wolf" style="width:88px; height:auto; display:block; filter:drop-shadow(0 6px 6px rgba(0,0,0,0.3));" />
+        <div class="wolf-smoke" id="wolfSmoke">💨</div>
+      </div>
+
+      <div class="gasp-bubble" id="gaspBubble">!</div>
+
+      <div class="basket-hud">
+        <span class="icon">🐺</span>
+        <div>
+          <div>Wolf status</div>
+          <div class="contents" id="wolfStatusText">watching from the clearing</div>
+        </div>
+      </div>
+
+      <!-- character (chapter 5 copy) -->
+      <div class="char" id="character6">
+        <img id="charImg6" class="char-sprite" alt="Little Red" style="width:72px; height:auto; display:block; filter:drop-shadow(0 6px 6px rgba(0,0,0,0.2));" />
+      </div>
+
+      <div class="scene-caption" id="sceneCaption6">The wolf steps out and asks where she's headed — and she tells him all about Grandma's cottage.</div>
+     </div>
+
+     <div class="scene-inner" id="scene7" style="display:none">
+      <div class="sky-glow"></div>
+      <div class="layer hills-far"></div>
+      <div class="layer hills-mid"></div>
+      <div class="layer ground"></div>
+
+      <!-- Grandma's house, visible in the distance -->
+      <div class="distant-house">
+        <svg viewBox="0 0 150 120" width="110" height="88">
+          <polygon points="10,55 75,10 140,55" fill="#8a4b32"/>
+          <rect x="25" y="55" width="100" height="60" fill="#e9c496"/>
+          <rect x="65" y="75" width="24" height="40" fill="#5c3d21"/>
+          <rect x="35" y="65" width="18" height="18" fill="#cfe8ea" stroke="#5c3d21" stroke-width="2"/>
+          <rect x="97" y="65" width="18" height="18" fill="#cfe8ea" stroke="#5c3d21" stroke-width="2"/>
+        </svg>
+      </div>
+
+      <!-- the list, shown as 3 indexed basket slots -->
+      <div class="list-slots">
+        <div class="list-slot" id="slot0"><div class="slot-index">0</div><div class="slot-icon">🍞</div><div class="slot-label">bread</div></div>
+        <div class="list-slot" id="slot1"><div class="slot-index">1</div><div class="slot-icon">🧀</div><div class="slot-label">cheese</div></div>
+        <div class="list-slot" id="slot2"><div class="slot-index">2</div><div class="slot-icon">🍯</div><div class="slot-label">jam</div></div>
+      </div>
+
+      <div class="basket-hud">
+        <span class="icon">📋</span>
+        <div>
+          <div>Grandma wants</div>
+          <div class="contents">cheese</div>
+        </div>
+      </div>
+
+      <!-- character (chapter 6 copy) -->
+      <div class="char" id="character7">
+        <img id="charImg7" class="char-sprite" alt="Little Red" style="width:72px; height:auto; display:block; filter:drop-shadow(0 6px 6px rgba(0,0,0,0.2));" />
+      </div>
+
+      <div class="handoff-item" id="handoffItem"></div>
+
+      <div class="scene-caption" id="sceneCaption7">Grandma's house is finally in sight — she has no idea the wolf reached it first. First, one last check of the basket.</div>
+     </div>
+
+     <div class="scene-inner" id="scene8" style="display:none">
+      <!-- wooden cottage interior -->
+      <div class="cottage-wall"></div>
+      <div class="cottage-floor"></div>
+      <div class="cottage-beam" style="top:8%;"></div>
+      <div class="cottage-beam" style="top:8%; left:38%;"></div>
+      <div class="cottage-window">
+        <div class="window-glow"></div>
+      </div>
+
+      <!-- closet -->
+      <div class="closet" id="closetDoor">
+        <div class="closet-frame">
+          <div class="closet-panel left"></div>
+          <div class="closet-panel right"></div>
+        </div>
+        <div class="grandma-reveal" id="grandmaReveal"><img id="grandmaRevealImg" src="assets/grandma_surprised.png" alt="Grandma" style="width:80px; height:auto; display:block;" /></div>
+      </div>
+
+      <!-- bed with the disguised wolf -->
+      <div class="bed-scene" id="bedScene">
+        <img id="grandmaBedImg" src="assets/wolf_in_bed.png" alt="Grandma in bed" style="width:145px; height:auto; display:block;" />
+      </div>
+
+      <div class="dialogue-bubble" id="dialogueBubble"></div>
+
+      <!-- character (chapter 7 copy) -->
+      <div class="char" id="character8">
+        <img id="charImg8" class="char-sprite" alt="Little Red" style="width:72px; height:auto; display:block; filter:drop-shadow(0 6px 6px rgba(0,0,0,0.25));" />
+      </div>
+
+      <div class="scene-caption" id="sceneCaption8">Little Red steps into the cottage — something about "Grandma" looks different today.</div>
+     </div>
+
+     <div class="scene-inner" id="scene9" style="display:none">
+      <div class="cottage-wall"></div>
+      <div class="cottage-floor"></div>
+      <div class="cottage-beam" style="top:8%;"></div>
+      <div class="cottage-beam" style="top:8%; left:38%;"></div>
+      <div class="cottage-window">
+        <div class="window-glow" id="windowGlow9"></div>
+        <div class="police-flash" id="policeFlash9"></div>
+      </div>
+
+      <!-- the defeated wolf -->
+      <div class="wolf-down" id="wolfDown9">
+        <img id="wolfImg9" alt="The Wolf" style="width:95px; height:auto; display:block; filter:drop-shadow(0 6px 6px rgba(0,0,0,0.3));" />
+        <div class="dizzy-stars" id="dizzyStars9">💫</div>
+      </div>
+
+      <!-- the real grandma, freed and safe -->
+      <div class="grandma9" id="grandma9">
+        <img id="grandmaImg9" alt="Grandma" style="width:115px; height:auto; display:block;" />
+      </div>
+
+      <div class="dialogue-bubble" id="dialogueBubble9"></div>
+
+      <!-- character (chapter 9 copy) -->
+      <div class="char" id="character9">
+        <img id="charImg9" class="char-sprite" alt="Little Red" style="width:72px; height:auto; display:block; filter:drop-shadow(0 6px 6px rgba(0,0,0,0.25));" />
+      </div>
+
+      <div class="scene-caption" id="sceneCaption9">The wolf's trick is over — now they just need to finish this the right way.</div>
+     </div>
+    </section>
+
+    <div class="story-complete-overlay" id="storyCompleteOverlay">
+      <div class="story-complete-card">
+        <div class="story-complete-title">Story Complete! 🎉</div>
+        <div class="story-complete-sub">Little Red made it safely to Grandma's — and back home again.</div>
+        <div class="story-complete-stat">Total XP earned: <span id="finalXP">0</span></div>
+        <div class="story-complete-achievements">
+          <div class="story-complete-label">Achievements unlocked</div>
+          <div id="finalAchievements"></div>
+        </div>
+        <div class="story-complete-achievements">
+          <div class="story-complete-label">What you practiced</div>
+          <div id="finalSkills"></div>
+        </div>
+        <div style="display:flex; gap:10px; justify-content:center; margin-top:14px;">
+          <button class="btn-run" id="storyCompleteBackToMap">Back to Games</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="editor-wrap">
+      <div class="editor-header">
+        <div class="chapter-eyebrow" id="chapterEyebrow">Chapter 1 · Variables</div>
+        <div class="chapter-title" id="chapterTitleText">Leaving Home</div>
+        <div class="chapter-desc" id="chapterDescText">Little Red's basket, her destination, and her readiness to leave are all controlled by variables below — but a few of them are wrong. Fix them so she can set off for Grandma's house.</div>
+      </div>
+
+      <div class="editor-body">
+        <div class="code-panel" id="codePanel">
+          <div class="line-nums" id="lineNums"></div>
+          <textarea id="codeArea" spellcheck="false"></textarea>
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+
+        <div class="debug-panel">
+          <button class="debug-toggle" id="debugToggle">🔧 Debug: what Run last saw <span id="debugChevron">▾</span></button>
+          <div class="debug-body" id="debugBody">Run the code to see a breakdown here.</div>
+        </div>
+
+        <div class="controls">
+          <button class="btn-run" id="runBtn">▶ Run Code</button>
+          <button class="btn-secondary" id="resetBtn">↺ Reset</button>
+          <button class="btn-hint" id="hintBtn">💡 Hint</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>CodeTales · a programming adventure through the forest</footer>
+</div>
+
+<div class="toast" id="toast">
+  <div class="icon">🏆</div>
+  <div>
+    <div class="title" id="toastTitle">First Bug Fixed</div>
+    <div class="sub" id="toastSub">+50 XP</div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
